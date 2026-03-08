@@ -9,4 +9,7 @@ API_HASH = os.environ.get("API_HASH", "9bb0c527d53d497506baf1bd17d7426c")   # Ap
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "8464007781:AAFMqI8r2fo0ubXGuq_0rIFpt-jo28Z1Hqw") # Bot Token
 
 MONGO_URI = os.environ.get("MONGO_URI", "mongodb+srv://sjadba:jasbfas@cluster0.pxtm9vd.mongodb.net/?retryWrites=true&w=majority")
+API = "https://spotty-mufi-mafia-bd412381.koyeb.app"
+
 # =================================================================================
+
