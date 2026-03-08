@@ -23,8 +23,8 @@ async def ping_other_bot():
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(API) as response:
-                    pass # Chup-chaap ping karega, terminal spam nahi karega
-                    # print(f"🔄 Pinged {API} - Status: {response.status}") 
+                    # pass # Chup-chaap ping karega, terminal spam nahi karega
+                    print(f"🔄 Pinged {API} - Status: {response.status}") 
         except Exception as e:
             print(f"❌ Ping failed: {e}")
             
@@ -57,3 +57,4 @@ if __name__ == "__main__":
         loop.run_until_complete(run_all_services())
     except KeyboardInterrupt:
         print("\n🛑 Bot ko roka gaya.")
+
