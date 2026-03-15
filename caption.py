@@ -42,14 +42,15 @@ def get_readable_time(seconds):
         return f"{h:02d}:{m:02d}:{s:02d}"
     return f"{m:02d}:{s:02d}"
 
-def clean_text(text):
-    """Apply filters: remove @mentions, replace _ . with space, remove URLs and [brackets] content."""
+def clean_text(text, preserve_links=False):
+    """Apply filters: remove @mentions, replace _ . with space, optionally remove URLs and [brackets] content."""
     if not text:
         return ""
     text = re.sub(r'@\w+', '', text)
     text = text.replace('_', ' ').replace('.', ' ')
-    text = re.sub(r'https?://\S+', '', text)
-    text = re.sub(r't.me/\S+', '', text)
+    if not preserve_links:
+        text = re.sub(r'https?://\S+', '', text)
+        text = re.sub(r't\.me/\S+', '', text)
     text = re.sub(r'\[[^\]]*\]', '', text)
     text = re.sub(r'\s+', ' ', text).strip()
     return text
@@ -439,14 +440,19 @@ async def track_upcoming_messages(client, message):
         duration_sec = getattr(media, "duration", 0)
 
     original_cap = message.caption.html if message.caption else (message.text.html if message.text else "")
-    cleaned_cap = clean_text(original_cap)
-    cleaned_file_name = clean_text(file_name)
+    
+    # YEH IMPORTANT CHANGE:
+    # Original caption se SIRF mentions aur special characters hatenge, links nahi
+    cleaned_cap = clean_text(original_cap, preserve_links=True)
+    
+    # File name se bhi links nahi hatenge, lekin file name mein generally links nahi hote
+    cleaned_file_name = clean_text(file_name, preserve_links=True)
 
     await queue_collection.insert_one({
         "chat_id": message.chat.id,
         "message_id": message.id,
         "msg_type": msg_type,
-        "original_cap": cleaned_cap,
+        "original_cap": cleaned_cap,  # Ab isme links safe rahenge
         "file_name": cleaned_file_name,
         "size_bytes": size_bytes,
         "duration_sec": duration_sec
